@@ -1,0 +1,50 @@
+# Compose fileのバージョン指定
+version: '3'
+# コンテナ定義
+services:
+ # laravel動作コンテナ
+ app:
+   #  ホストport:コンテナport
+   ports:
+     - "8000:80"
+   # Dockerfileパス指定
+   build: ./docker/app
+   # コンテナ名指定
+   container_name: app
+   # コンテナとホスト側のディレクトリ同期場所指定
+   # Laravelのソース場所
+   volumes:
+     - ./src:/var/www/html
+ # MySQLコンテナ
+ db:
+   # DockerHubからMySQL5.7の公式イメージをダウンロード
+   image: mysql:5.7
+   # コンテナ名指定
+   container_name: db
+   # Dockerfileパス指定
+   build: ./docker/db
+   # ディレクトリ同期
+   volumes:
+     - ./docker/db/data:/var/lib/mysql
+   ports:
+     - 3306:3306
+ phpmyadmin:
+   # イメージ指定
+   image: phpmyadmin/phpmyadmin
+   # コンテナ名
+   container_name: pma
+   # 設定
+   environment:
+      MYSQL_HOST: 'db'
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: 'root'
+   ports:
+      - 8080:80
+   volumes:
+      - /sessions
+ #  テストSMTPサーバ
+ mailhog:
+   image: mailhog/mailhog
+   container_name: mail
+   ports:
+     - "8025:8025"
