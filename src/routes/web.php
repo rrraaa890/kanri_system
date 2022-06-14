@@ -14,3 +14,14 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+Route::resource('/managements', 'ManagementController');
+Route::resource('/coils', 'CoilController');
+Route::resource('/levelers', 'LevelerController');
+Route::resource('/trimmings', 'TrimmingController');
+Route::resource('/press', 'PressController');
